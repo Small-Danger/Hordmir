@@ -740,23 +740,17 @@ tbody tr:hover {
 }
 
 .contact-grid {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 3rem;
-  justify-items: center;
-}
-
-@media (min-width: 992px) {
-  .contact-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
-  }
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .contact-left {
   text-align: center;
-  max-width: 500px;
+  width: 100%;
 }
 
 .contact-right {
