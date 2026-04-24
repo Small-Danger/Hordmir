@@ -29,29 +29,30 @@ function bindWhatsApp() {
 }
 
 // ============= New Arrivals =============
+
 function renderNewArrivals() {
   const grid = $("#new-arrivals-grid");
   if (!grid) return;
-  const imgs = ["perfume-1.png", "perfume-2.png", "perfume-3.png", "perfume-4.png"];
-  grid.innerHTML = NEW_ARRIVALS.slice(0, 4).map((p, i) => {
+
+  grid.innerHTML = NEW_ARRIVALS.slice(0, 8).map(p => {
     const link = waLink(waProduct(p.brand, p.name, p.reference));
+    const stockClass = p.stock === 'En stock' ? 'badge-stock' : p.stock === 'Limité' ? 'badge-limited' : 'badge-order';
     return `
-      <a class="parfum-card" href="${link}" target="_blank" rel="noopener noreferrer">
-        <div class="parfum-img-wrap">
-          <img src="${imgs[i]}" alt="${escapeHtml(p.brand)} ${escapeHtml(p.name)}" loading="lazy" />
-          <div class="parfum-img-corner-tr"></div>
-          <div class="parfum-img-corner-bl"></div>
-        </div>
-        <div class="parfum-info">
-          <div class="parfum-brand">${escapeHtml(p.brand)}</div>
-          <div class="parfum-name">${escapeHtml(p.name)}</div>
-          <div class="parfum-meta">${escapeHtml(p.family)} · ${escapeHtml(p.size)} · ${escapeHtml(p.gender)}</div>
-          <div class="parfum-divider"></div>
-          <div class="parfum-cta">Demander un devis →</div>
-        </div>
-      </a>`;
+      <tr>
+        <td class="cell-ref">${escapeHtml(p.reference)}</td>
+        <td class="cell-brand">${escapeHtml(p.brand)}</td>
+        <td class="cell-name">${escapeHtml(p.name)}</td>
+        <td class="hide-sm cell-muted">${escapeHtml(p.family)}</td>
+        <td class="hide-md cell-muted">${escapeHtml(p.gender)}</td>
+        <td class="hide-md cell-muted">${escapeHtml(p.size)}</td>
+        <td><span class="badge ${stockClass}">${escapeHtml(p.stock)}</span></td>
+        <td style="text-align:right;">
+          <a class="btn-quote" href="${link}" target="_blank" rel="noopener noreferrer">Devis →</a>
+        </td>
+      </tr>`;
   }).join("");
 }
+
 // ============= Filters =============
 function populateFilterOptions() {
   const brandSel = $("#filter-brand");
