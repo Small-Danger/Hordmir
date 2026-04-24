@@ -1,0 +1,3 @@
+[build]
+  publish = "hordmir_ameliore"
+  functions = "netlify/functions"
