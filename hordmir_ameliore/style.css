@@ -75,17 +75,18 @@ h3, h4 { font-family: var(--font-serif); font-weight: 500; line-height: 1.15; }
 }
 .header-inner {
   display: flex; align-items: center; justify-content: space-between;
-  height: 60px;
+  height: 80px;
   padding: 0 1rem;
 }
 @media (min-width: 480px) {
   .header-inner {
-    height: 70px;
+    height: 100px;
     padding: 0 1.5rem;
   }
 }
 @media (min-width: 1024px) {
   .header-inner {
+    height: 110px;
     padding: 0 2.5rem;
   }
 }
@@ -95,13 +96,13 @@ h3, h4 { font-family: var(--font-serif); font-weight: 500; line-height: 1.15; }
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  height: 50px;
+  height: 70px;
 }
 
 .logo-img {
   height: 100%;
   width: auto;
-  max-width: 120px;
+  max-width: 180px;
   object-fit: contain;
 }
 
@@ -742,24 +743,45 @@ tbody tr:hover {
   display: grid;
   grid-template-columns: 1fr;
   gap: 3rem;
+  justify-items: center;
 }
 
 @media (min-width: 992px) {
   .contact-grid {
     grid-template-columns: 1fr 1fr;
     gap: 4rem;
+    align-items: center;
   }
+}
+
+.contact-left {
+  text-align: center;
+  max-width: 500px;
+}
+
+.contact-right {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.contact-intro {
+  text-align: center;
 }
 
 .contact-info-blocks {
   display: grid;
   gap: 1.5rem;
+  justify-items: center;
 }
 
 .info-block {
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
   align-items: center;
+  text-align: center;
+  max-width: 200px;
 }
 
 .info-icon {
