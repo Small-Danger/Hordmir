@@ -1,8 +1,6 @@
 // ============= State =============
 const state = {
   search: "",
-  brand: "all",
-  family: "all",
   gender: "all",
   page: 1,
 };
@@ -44,26 +42,9 @@ function renderNewArrivals() {
 }
 
 // ============= Filters =============
-function populateFilterOptions() {
-  const brandSel = $("#filter-brand");
-  const familySel = $("#filter-family");
-  if (brandSel) {
-    brandSel.innerHTML =
-      `<option value="all">Toutes</option>` +
-      ALL_BRANDS.map((b) => `<option value="${escapeHtml(b)}">${escapeHtml(b)}</option>`).join("");
-  }
-  if (familySel) {
-    familySel.innerHTML =
-      `<option value="all">Toutes</option>` +
-      ALL_FAMILIES.map((f) => `<option value="${escapeHtml(f)}">${escapeHtml(f)}</option>`).join("");
-  }
-}
-
 function getFiltered() {
   const q = state.search.trim().toLowerCase();
   return PERFUMES.filter((p) => {
-    if (state.brand !== "all" && p.brand !== state.brand) return false;
-    if (state.family !== "all" && p.family !== state.family) return false;
     if (state.gender !== "all" && p.gender !== state.gender) return false;
     if (!q) return true;
     return (
@@ -128,16 +109,6 @@ function bindFilters() {
     state.page = 1;
     renderCatalogue();
   });
-  $("#filter-brand").addEventListener("change", (e) => {
-    state.brand = e.target.value;
-    state.page = 1;
-    renderCatalogue();
-  });
-  $("#filter-family").addEventListener("change", (e) => {
-    state.family = e.target.value;
-    state.page = 1;
-    renderCatalogue();
-  });
   $("#filter-gender").addEventListener("change", (e) => {
     state.gender = e.target.value;
     state.page = 1;
@@ -145,13 +116,9 @@ function bindFilters() {
   });
   $("#filter-reset").addEventListener("click", () => {
     state.search = "";
-    state.brand = "all";
-    state.family = "all";
     state.gender = "all";
     state.page = 1;
     $("#filter-search").value = "";
-    $("#filter-brand").value = "all";
-    $("#filter-family").value = "all";
     $("#filter-gender").value = "all";
     renderCatalogue();
   });
@@ -173,46 +140,46 @@ function bindFilters() {
 // ============= Init =============
 document.addEventListener("DOMContentLoaded", () => {
   bindWhatsApp();
-  renderNewArrivals();
-  populateFilterOptions();
-  bindFilters();
-  renderCatalogue();
-  document.getElementById("year").textContent = new Date().getFullYear();
+  initMobileMenu();
+  const yearEl = document.getElementById("year");
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  if (document.getElementById("filter-search")) {
+    renderNewArrivals();
+    bindFilters();
+    renderCatalogue();
+  }
 });
 
-
-
-const header = document.querySelector('.header');
-window.addEventListener('scroll', () => {
-  header.classList.toggle('scrolled', window.scrollY > 40);
-}, { passive: true });
-
-
+const header = document.querySelector(".header");
+if (header) {
+  window.addEventListener(
+    "scroll",
+    () => {
+      header.classList.toggle("scrolled", window.scrollY > 40);
+    },
+    { passive: true }
+  );
+}
 
 // ============= Mobile Menu =============
 function initMobileMenu() {
-  const toggle = document.querySelector('.menu-toggle');
-  const nav = document.querySelector('.nav');
-  const navLinks = document.querySelectorAll('.nav a');
+  const toggle = document.querySelector(".menu-toggle");
+  const nav = document.querySelector(".nav");
+  const navLinks = document.querySelectorAll(".nav a");
 
   if (!toggle || !nav) return;
 
-  toggle.addEventListener('click', () => {
-    toggle.classList.toggle('active');
-    nav.classList.toggle('active');
-    // document.body.style.overflow = nav.classList.contains('active') ? 'hidden' : '';
+  toggle.addEventListener("click", () => {
+    toggle.classList.toggle("active");
+    nav.classList.toggle("active");
   });
 
-  navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      toggle.classList.remove('active');
-      nav.classList.remove('active');
-      document.body.style.overflow = '';
+  navLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      toggle.classList.remove("active");
+      nav.classList.remove("active");
+      document.body.style.overflow = "";
     });
   });
 }
-
-// Update DOMContentLoaded to include initMobileMenu
-document.addEventListener("DOMContentLoaded", () => {
-  initMobileMenu();
-});

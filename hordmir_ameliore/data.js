@@ -75,8 +75,6 @@ const PERFUMES = Array.from({ length: 360 }, (_, i) => {
 });
 
 const NEW_ARRIVALS = PERFUMES.filter((p) => p.isNew).slice(0, 6);
-const ALL_BRANDS = [...new Set(PERFUMES.map((p) => p.brand))].sort();
-const ALL_FAMILIES = [...new Set(PERFUMES.map((p) => p.family))].sort();
 
 // ----- WhatsApp -----
 const WHATSAPP_NUMBER = "33600000000"; // remplacer par le vrai numéro

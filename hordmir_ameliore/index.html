@@ -31,7 +31,7 @@
         <span></span>
       </button>
       <nav class="nav" aria-label="Navigation principale">
-        <a href="#about">À propos</a>
+        <a href="a-propos.html">À propos</a>
         <a href="#nouveautes">Nouveautés</a>
         <a href="#catalogue">Catalogue</a>
         <a href="#contact">Contact</a>
@@ -48,7 +48,7 @@
 
       <!-- LEFT: text -->
       <div class="hero-content">
-        <p class="eyebrow">Grossiste · B2B · Professionnel</p>
+        <p class="eyebrow">Grossiste · Professionnel</p>
         <h1>LUXURY<br>PERFUME</h1>
         <p class="hero-description">
           Une sélection exclusive de 350+ fragrances<br>
@@ -79,119 +79,19 @@
     </div>
   </section>
 
-  <!-- About -->
-  <section id="about" class="section about">
-    <div class="container about-grid">
-
-      <!-- COLONNE GAUCHE (TITRE) -->
-      <div class="about-left">
-        <p class="eyebrow">À propos</p>
-
-        <h2 class="about-title">
-          Une <span class="gold-gradient italic">passion</span> du parfum,<br />
-          une expertise du gros.
-        </h2>
-      </div>
-
-      <!-- COLONNE DROITE (CONTENU) -->
-      <div class="about-right">
-        <div class="about-text">
-          <p>
-            Depuis plus de 15 ans, Maison d'Or sélectionne pour les professionnels les plus belles
-            fragrances des grandes maisons de parfumerie. Notre force : une logistique précise, des
-            prix compétitifs et un service personnalisé sur WhatsApp.
-          </p>
-        </div>
-
-        <div class="about-features">
-
-          <div class="feature">
-            <div class="feature-icon">✦</div>
-            <div>
-              <div class="feature-title">Authenticité garantie</div>
-              <div class="feature-desc">
-                Approvisionnement direct auprès des marques et distributeurs officiels.
-              </div>
-            </div>
-          </div>
-
-          <div class="feature">
-            <div class="feature-icon">⚡</div>
-            <div>
-              <div class="feature-title">Livraison express</div>
-              <div class="feature-desc">
-                Expédition sous 24h, livraison Europe en 48-72h.
-              </div>
-            </div>
-          </div>
-
-          <div class="feature">
-            <div class="feature-icon">✉</div>
-            <div>
-              <div class="feature-title">Commande simplifiée</div>
-              <div class="feature-desc">
-                Catalogue en ligne et commande directement sur WhatsApp.
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-
-  <!-- New Arrivals -->
- <!-- New Arrivals -->
-<section id="nouveautes" class="section nouveautes">
-  <div class="container">
-    <div class="section-head fade-up">
-      <p class="eyebrow">Sélection du mois</p>
-      <h2><span class="gold-gradient italic">Nouveautés</span> exclusives</h2>
-      <p>Les dernières références arrivées dans notre catalogue, soigneusement sélectionnées pour leurs notes signatures.</p>
-    </div>
-    <div class="table-wrap fade-up">
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>Réf.</th>
-              <th>Marque</th>
-              <th>Parfum</th>
-              <th class="hide-sm">Famille</th>
-              <th class="hide-md">Genre</th>
-              <th class="hide-md">Cont.</th>
-            </tr>
-          </thead>
-          <tbody id="new-arrivals-grid"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</section>
-
   <!-- Catalogue -->
   <section id="catalogue" class="section">
     <div class="container">
       <div class="section-head">
         <p class="eyebrow">Catalogue complet</p>
         <h2><span class="gold-gradient italic">350+</span> parfums à votre disposition</h2>
-        <p>Recherchez par marque, référence ou nom. Filtrez par famille olfactive, genre ou maison.</p>
+        <p>Recherchez par marque, référence ou nom. Filtrez par genre.</p>
       </div>
 
       <div class="filters">
         <div>
           <label class="filter-label" for="filter-search">Recherche</label>
           <input id="filter-search" class="filter-input" type="text" placeholder="Marque, nom, référence..." />
-        </div>
-        <div>
-          <label class="filter-label" for="filter-brand">Marque</label>
-          <select id="filter-brand" class="filter-select"></select>
-        </div>
-        <div>
-          <label class="filter-label" for="filter-family">Famille</label>
-          <select id="filter-family" class="filter-select"></select>
         </div>
         <div>
           <label class="filter-label" for="filter-gender">Genre</label>
@@ -232,7 +132,34 @@
       </div>
     </div>
   </section>
-
+  <!-- New Arrivals -->
+ <!-- New Arrivals -->
+ <section id="nouveautes" class="section nouveautes">
+  <div class="container">
+    <div class="section-head fade-up">
+      <p class="eyebrow">Sélection du mois</p>
+      <h2><span class="gold-gradient italic">Nouveautés</span> exclusives</h2>
+      <p>Les dernières références arrivées dans notre catalogue, soigneusement sélectionnées pour leurs notes signatures.</p>
+    </div>
+    <div class="table-wrap fade-up">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Réf.</th>
+              <th>Marque</th>
+              <th>Parfum</th>
+              <th class="hide-sm">Famille</th>
+              <th class="hide-md">Genre</th>
+              <th class="hide-md">Cont.</th>
+            </tr>
+          </thead>
+          <tbody id="new-arrivals-grid"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
   <!-- Contact -->
   <section id="contact" class="section contact">
     <div class="container">

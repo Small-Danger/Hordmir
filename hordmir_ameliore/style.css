@@ -387,6 +387,15 @@ h3, h4 { font-family: var(--font-serif); font-weight: 500; line-height: 1.15; }
   position: relative;
 }
 
+/* Première section (page dédiée) sous header fixe */
+.about.about--page-start {
+  padding-top: clamp(6.5rem, 12vh + 4rem, 10rem);
+}
+
+.about-cta-wrap {
+  margin-top: 2.5rem;
+}
+
 .about::before {
   content: '';
   position: absolute;
@@ -611,7 +620,7 @@ h3, h4 { font-family: var(--font-serif); font-weight: 500; line-height: 1.15; }
 
 @media (min-width: 1024px) {
   .filters {
-    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    grid-template-columns: 2fr 1fr auto;
     align-items: end;
   }
 }
