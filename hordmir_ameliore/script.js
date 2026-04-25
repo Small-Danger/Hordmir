@@ -271,7 +271,33 @@ function bindHeaderSearch() {
   const headerSearch = $("#header-search");
   const filterSearch = $("#filter-search");
   const catalogueSection = document.getElementById("catalogue");
+  const pageType = document.body.dataset.page || "";
   if (!headerSearch || !filterSearch) return;
+  const isMobileViewport = window.matchMedia("(max-width: 767px)").matches;
+
+  function goToSearchPage() {
+    const query = encodeURIComponent((headerSearch.value || state.search || "").trim());
+    const target = query ? `recherche.html?q=${query}` : "recherche.html";
+    window.location.href = target;
+  }
+
+  // Sur la home, la barre sert de point d'entrée vers la page dédiée.
+  if (pageType === "home") {
+    headerSearch.addEventListener("click", (e) => {
+      e.preventDefault();
+      goToSearchPage();
+    });
+    headerSearch.addEventListener("focus", () => {
+      goToSearchPage();
+    });
+    headerSearch.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        goToSearchPage();
+      }
+    });
+    return;
+  }
 
   // Initialise la barre du header avec la valeur courante.
   headerSearch.value = state.search;
@@ -286,7 +312,9 @@ function bindHeaderSearch() {
   }
 
   headerSearch.addEventListener("focus", () => {
-    scrollToCatalogueIfNeeded();
+    if (!isMobileViewport) {
+      scrollToCatalogueIfNeeded();
+    }
   });
 
   headerSearch.addEventListener("input", (e) => {
@@ -295,7 +323,9 @@ function bindHeaderSearch() {
     if (filterSearch.value !== state.search) {
       filterSearch.value = state.search;
     }
-    scrollToCatalogueIfNeeded();
+    if (!isMobileViewport) {
+      scrollToCatalogueIfNeeded();
+    }
     renderCatalogue();
   });
 
@@ -330,6 +360,11 @@ function bindNouveautesPagination() {
 
 // ============= Init =============
 document.addEventListener("DOMContentLoaded", () => {
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+
   void (async () => {
     bindWhatsApp();
     initMobileMenu();
@@ -337,6 +372,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (yearEl) yearEl.textContent = new Date().getFullYear();
 
     if (document.getElementById("filter-search")) {
+      const filterSearch = document.getElementById("filter-search");
+      const filterGender = document.getElementById("filter-gender");
+      const params = new URLSearchParams(window.location.search);
+      const qParam = params.get("q");
+      const gParam = params.get("genre");
+      if (qParam) {
+        state.search = qParam.trim();
+        if (filterSearch) filterSearch.value = state.search;
+      }
+      if (gParam && ["all", "Femme", "Homme", "Mixte"].includes(gParam)) {
+        state.gender = gParam;
+        if (filterGender) filterGender.value = state.gender;
+      }
+
       await loadProductsFromSheet();
       renderNewArrivals();
       bindNouveautesPagination();

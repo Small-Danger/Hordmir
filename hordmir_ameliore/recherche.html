@@ -4,9 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>À propos — HORDMIR Luxury Perfums</title>
-  <meta name="description"
-    content="HORDMIR : grossiste en parfums de luxe depuis plus de 15 ans. Authenticité, livraison express, commande WhatsApp." />
+  <title>Recherche — HORDMIR Luxury Perfums</title>
+  <meta name="description" content="Recherche dédiée du catalogue HORDMIR : filtrez rapidement les parfums par nom, marque, référence et genre." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,14 +15,14 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 
-<body data-page="about">
+<body data-page="search">
   <header class="header">
     <div class="container header-inner">
       <a href="index.html#hero" class="logo"><img src="Logo.svg" alt="HORDMIR Luxury Perfums" class="logo-img" /></a>
       <nav class="nav" aria-label="Navigation principale">
-        <a href="a-propos.html" aria-current="page">À propos</a>
+        <a href="index.html#a-propos">À propos</a>
         <a href="index.html#nouveautes">Nouveautés</a>
-        <a href="index.html#catalogue">Catalogue</a>
+        <a href="recherche.html" aria-current="page">Recherche</a>
         <a href="index.html#contact">Contact</a>
       </nav>
       <div class="header-right">
@@ -39,72 +38,57 @@
     </div>
   </header>
 
-  <main>
-    <section id="about" class="section about about--page-start">
-      <div class="container about-grid">
-
-        <div class="about-left">
-          <p class="eyebrow">À propos</p>
-
-          <h2 class="about-title">
-            Une <span class="gold-gradient italic">passion</span> du parfum,<br />
-            une expertise du gros.
-          </h2>
+  <main class="search-page-main">
+    <section id="catalogue" class="section">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Recherche dédiée</p>
+          <h1><span class="gold-gradient italic">Trouvez</span> rapidement vos parfums</h1>
+          <p>Saisissez une marque, une référence ou un nom puis filtrez par genre. Les résultats se mettent à jour instantanément.</p>
         </div>
 
-        <div class="about-right">
-          <div class="about-text">
-            <p>
-              Depuis plus de 15 ans, Maison d'Or sélectionne pour les professionnels les plus belles
-              fragrances des grandes maisons de parfumerie. Notre force : une logistique précise, des
-              prix compétitifs et un service personnalisé sur WhatsApp.
-            </p>
+        <div class="filters">
+          <div>
+            <label class="filter-label" for="filter-search">Recherche</label>
+            <input id="filter-search" class="filter-input" type="search" placeholder="Marque, nom, référence..." />
           </div>
-
-          <div class="about-features">
-
-            <div class="feature">
-              <div class="feature-icon">✦</div>
-              <div>
-                <div class="feature-title">Authenticité garantie</div>
-                <div class="feature-desc">
-                  Approvisionnement direct auprès des marques et distributeurs officiels.
-                </div>
-              </div>
-            </div>
-
-            <div class="feature">
-              <div class="feature-icon">⚡</div>
-              <div>
-                <div class="feature-title">Livraison express</div>
-                <div class="feature-desc">
-                  Expédition sous 24h, livraison Europe en 48-72h.
-                </div>
-              </div>
-            </div>
-
-            <div class="feature">
-              <div class="feature-icon">✉</div>
-              <div>
-                <div class="feature-title">Commande simplifiée</div>
-                <div class="feature-desc">
-                  Catalogue en ligne et commande directement sur WhatsApp.
-                </div>
-              </div>
-            </div>
-
+          <div>
+            <label class="filter-label" for="filter-gender">Genre</label>
+            <select id="filter-gender" class="filter-select">
+              <option value="all">Tous</option>
+              <option value="Femme">Femme</option>
+              <option value="Homme">Homme</option>
+              <option value="Mixte">Mixte</option>
+            </select>
           </div>
-
-          <p class="about-cta-wrap">
-            <a class="btn-primary" href="index.html#catalogue">
-              DÉCOUVRIR LE CATALOGUE
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </a>
-          </p>
+          <button id="filter-reset" class="btn-reset" type="button">Reset</button>
         </div>
 
+        <div class="results-count" id="results-count"></div>
+        <p class="table-hint">Glissez horizontalement pour voir toutes les colonnes.</p>
+        <div class="table-wrap">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Réf.</th>
+                  <th>Marque</th>
+                  <th>Parfum</th>
+                  <th class="hide-sm">Famille</th>
+                  <th class="hide-md">Genre</th>
+                  <th class="hide-md">Cont.</th>
+                </tr>
+              </thead>
+              <tbody id="catalogue-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="pagination" class="pagination" style="display:none;">
+          <button id="prev-page" class="btn-page" type="button">← Précédent</button>
+          <span id="page-info" class="page-info"></span>
+          <button id="next-page" class="btn-page" type="button">Suivant →</button>
+        </div>
       </div>
     </section>
   </main>
