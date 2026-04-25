@@ -8,9 +8,6 @@ var PERFUMES = [];
 /** @type {typeof PERFUMES} */
 var NEW_ARRIVALS = [];
 
-// ----- TikTok (lien profil ou vidéo) -----
-const TIKTOK_PROFILE_URL = "https://www.tiktok.com/@hordmir"; // remplacer par le vrai @
-
 // ----- WhatsApp -----
 const WHATSAPP_NUMBER = "212674744700"; // +212 674 744 700 (format international sans + pour wa.me)
 const waLink = (msg) => `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;

@@ -117,14 +117,6 @@ function bindWhatsApp() {
   });
 }
 
-function bindTikTok() {
-  document.querySelectorAll("[data-tiktok]").forEach((a) => {
-    a.href = TIKTOK_PROFILE_URL;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-  });
-}
-
 // ============= New Arrivals =============
 
 function renderNewArrivals() {
@@ -340,7 +332,6 @@ function bindNouveautesPagination() {
 document.addEventListener("DOMContentLoaded", () => {
   void (async () => {
     bindWhatsApp();
-    bindTikTok();
     initMobileMenu();
     const yearEl = document.getElementById("year");
     if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -378,6 +369,7 @@ function initMobileMenu() {
   toggle.addEventListener("click", () => {
     toggle.classList.toggle("active");
     nav.classList.toggle("active");
+    document.body.style.overflow = nav.classList.contains("active") ? "hidden" : "";
   });
 
   navLinks.forEach((link) => {
