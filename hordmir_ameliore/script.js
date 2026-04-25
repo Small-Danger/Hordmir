@@ -236,9 +236,14 @@ function renderCatalogue() {
 
 // ============= Bindings =============
 function bindFilters() {
+  const headerSearch = $("#header-search");
+
   $("#filter-search").addEventListener("input", (e) => {
     state.search = e.target.value;
     state.page = 1;
+    if (headerSearch && headerSearch.value !== state.search) {
+      headerSearch.value = state.search;
+    }
     renderCatalogue();
   });
   $("#filter-gender").addEventListener("change", (e) => {
@@ -251,6 +256,7 @@ function bindFilters() {
     state.gender = "all";
     state.page = 1;
     $("#filter-search").value = "";
+    if (headerSearch) headerSearch.value = "";
     $("#filter-gender").value = "all";
     renderCatalogue();
   });
@@ -266,6 +272,30 @@ function bindFilters() {
     state.page++;
     renderCatalogue();
     document.getElementById("catalogue").scrollIntoView({ behavior: "smooth" });
+  });
+}
+
+function bindHeaderSearch() {
+  const headerSearch = $("#header-search");
+  const filterSearch = $("#filter-search");
+  if (!headerSearch || !filterSearch) return;
+
+  // Initialise la barre du header avec la valeur courante.
+  headerSearch.value = state.search;
+
+  headerSearch.addEventListener("input", (e) => {
+    state.search = e.target.value;
+    state.page = 1;
+    if (filterSearch.value !== state.search) {
+      filterSearch.value = state.search;
+    }
+    renderCatalogue();
+  });
+
+  headerSearch.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      document.getElementById("catalogue").scrollIntoView({ behavior: "smooth" });
+    }
   });
 }
 
@@ -304,6 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await loadProductsFromSheet();
       renderNewArrivals();
       bindNouveautesPagination();
+      bindHeaderSearch();
       bindFilters();
       renderCatalogue();
     }

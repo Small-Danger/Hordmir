@@ -175,6 +175,35 @@ h3, h4 { font-family: var(--font-serif); font-weight: 500; line-height: 1.15; }
   color: var(--gold);
 }
 
+.header-search {
+  flex: 1;
+  min-width: 110px;
+  max-width: 260px;
+}
+
+.header-search-input {
+  width: 100%;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 175, 55, 0.34);
+  background: rgba(8, 8, 8, 0.72);
+  color: var(--ivory);
+  padding: 0 0.95rem;
+  font-size: 0.82rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.header-search-input::placeholder {
+  color: rgba(245, 242, 237, 0.52);
+}
+
+.header-search-input:focus {
+  border-color: rgba(212, 175, 55, 0.66);
+  background: rgba(12, 12, 12, 0.9);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.14);
+}
+
 @media (min-width: 768px) {
   .nav {
     display: flex;
@@ -183,6 +212,9 @@ h3, h4 { font-family: var(--font-serif); font-weight: 500; line-height: 1.15; }
     align-items: center;
     gap: 2rem;
     margin: 0 0.5rem;
+  }
+  .header-search {
+    max-width: 300px;
   }
 }
 
@@ -999,14 +1031,23 @@ tbody tr:hover {
   z-index: 1;
   background: #000000;
   color: #ffffff;
+  border: 1.5px solid rgba(212, 175, 55, 0.75);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
 }
 
 .fab-tiktok .tiktok-logo-svg {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.42rem;
+  height: 1.42rem;
   overflow: visible;
   display: block;
+}
+
+.fab-tiktok .tiktok-logo-svg__glyph {
+  fill: #ffffff;
+  /* Effet "glitch" TikTok plus net */
+  filter:
+    drop-shadow(-1.3px 1px 0 #25f4ee)
+    drop-shadow(1.3px -1px 0 #fe2c55);
 }
 
 
