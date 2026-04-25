@@ -278,10 +278,24 @@ function bindFilters() {
 function bindHeaderSearch() {
   const headerSearch = $("#header-search");
   const filterSearch = $("#filter-search");
+  const catalogueSection = document.getElementById("catalogue");
   if (!headerSearch || !filterSearch) return;
 
   // Initialise la barre du header avec la valeur courante.
   headerSearch.value = state.search;
+
+  function scrollToCatalogueIfNeeded() {
+    if (!catalogueSection) return;
+    const rect = catalogueSection.getBoundingClientRect();
+    const partiallyVisible = rect.top < window.innerHeight && rect.bottom > 120;
+    if (!partiallyVisible) {
+      catalogueSection.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
+  headerSearch.addEventListener("focus", () => {
+    scrollToCatalogueIfNeeded();
+  });
 
   headerSearch.addEventListener("input", (e) => {
     state.search = e.target.value;
@@ -289,12 +303,13 @@ function bindHeaderSearch() {
     if (filterSearch.value !== state.search) {
       filterSearch.value = state.search;
     }
+    scrollToCatalogueIfNeeded();
     renderCatalogue();
   });
 
   headerSearch.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-      document.getElementById("catalogue").scrollIntoView({ behavior: "smooth" });
+      scrollToCatalogueIfNeeded();
     }
   });
 }
