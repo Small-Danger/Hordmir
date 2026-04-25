@@ -74,7 +74,12 @@ h3, h4 { font-family: var(--font-serif); font-weight: 500; line-height: 1.15; }
   border-bottom: 1px solid rgba(91, 58, 122, 0.3);
 }
 .header-inner {
-  display: flex; align-items: center; justify-content: space-between;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
   height: 80px;
   padding: 0 1rem;
 }
@@ -96,27 +101,112 @@ h3, h4 { font-family: var(--font-serif); font-weight: 500; line-height: 1.15; }
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  height: 70px;
+  height: 58px;
+  padding: 0.35rem 0.55rem;
+  border-radius: 14px;
+  background: radial-gradient(ellipse 80% 100% at 50% 30%, rgba(212, 175, 55, 0.12) 0%, rgba(10, 10, 10, 0.6) 55%, transparent 100%);
+  box-shadow:
+    0 0 0 1px rgba(212, 175, 55, 0.22),
+    0 4px 20px rgba(0, 0, 0, 0.45),
+    0 0 32px rgba(212, 175, 55, 0.08);
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+
+.logo:hover {
+  box-shadow:
+    0 0 0 1px rgba(212, 175, 55, 0.35),
+    0 6px 28px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(212, 175, 55, 0.14);
+  transform: translateY(-1px);
 }
 
 .logo-img {
   height: 100%;
   width: auto;
-  max-width: 180px;
+  max-width: 200px;
+  max-height: 52px;
   object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
 }
 
-.nav { display: none; gap: 1.5rem; }
-.nav a { font-size: 0.85rem; color: rgba(245, 242, 237, 0.8); transition: color .2s; }
-.nav a:hover { color: var(--gold); }
-@media (min-width: 768px) { 
-  .nav { 
+@media (min-width: 480px) {
+  .logo {
+    height: 68px;
+    padding: 0.4rem 0.65rem;
+    border-radius: 16px;
+  }
+  .logo-img {
+    max-width: 220px;
+    max-height: 60px;
+  }
+}
+
+@media (min-width: 768px) {
+  .logo {
+    height: 76px;
+  }
+  .logo-img {
+    max-width: 240px;
+    max-height: 68px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .logo {
+    height: 84px;
+    padding: 0.45rem 0.75rem;
+  }
+  .logo-img {
+    max-width: 260px;
+    max-height: 76px;
+  }
+}
+
+.nav {
+  display: none;
+  gap: 1.5rem;
+}
+.nav a {
+  font-size: 0.85rem;
+  color: rgba(245, 242, 237, 0.8);
+  transition: color 0.2s;
+}
+.nav a:hover {
+  color: var(--gold);
+}
+
+@media (min-width: 768px) {
+  .nav {
     display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
     gap: 2rem;
-  } 
+    margin: 0 0.5rem;
+  }
 }
 
-.header-actions { display: flex; align-items: center; gap: 0.75rem; }
+.header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+@media (min-width: 768px) {
+  .header-right {
+    gap: 0.75rem;
+    margin-left: 0;
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
 
 .btn-wa {
   display: none;
@@ -864,17 +954,67 @@ tbody tr:hover {
 }
 
 
-/* ========== Floating WhatsApp & Footer ========== */
-.fab {
-  position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 60;
-  width: 3.5rem; height: 3.5rem; border-radius: 50%;
-  background: #25D366; color: white;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-  transition: transform .2s;
+/* ========== Floating WhatsApp / TikTok & Footer ========== */
+.fab-group {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0;
 }
-.fab:hover { transform: scale(1.1); }
-.fab svg { width: 1.75rem; height: 1.75rem; }
+
+.fab {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.fab:hover {
+  transform: scale(1.08);
+  z-index: 3;
+}
+
+.fab svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+/* TikTok au-dessus, léger chevauchement sur WhatsApp */
+.fab-tiktok {
+  margin-bottom: -0.75rem;
+  z-index: 1;
+  background: #000000;
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.fab-tiktok .tiktok-logo-svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  overflow: visible;
+  display: block;
+}
+
+
+.fab-wa {
+  z-index: 2;
+  background: #25d366;
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.45);
+}
+
+.fab-wa:hover {
+  box-shadow: 0 10px 28px rgba(37, 211, 102, 0.55);
+}
 
 .footer {
   padding: 3rem 1rem;
@@ -887,17 +1027,58 @@ tbody tr:hover {
 
 /* ========== Mobile Menu ========== */
 .menu-toggle {
-  display: flex; flex-direction: column; justify-content: space-between;
-  width: 28px; height: 18px; background: transparent; border: none; cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  background: rgba(6, 6, 6, 0.72);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
   z-index: 100;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
-@media (min-width: 768px) { .menu-toggle { display: none; } }
+.menu-toggle:hover {
+  background: rgba(20, 20, 20, 0.88);
+  border-color: rgba(212, 175, 55, 0.45);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.12);
+}
 
-.menu-toggle span { width: 100%; height: 2px; background: var(--gold); transition: .3s; }
-.menu-toggle.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-.menu-toggle.active span:nth-child(2) { opacity: 0; }
-.menu-toggle.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+@media (min-width: 768px) {
+  .menu-toggle {
+    display: none;
+  }
+}
+
+.menu-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--gold);
+  transition: transform 0.3s, opacity 0.3s;
+  flex-shrink: 0;
+}
+
+.menu-toggle.active span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.menu-toggle.active span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.menu-toggle.active span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
 
 @media (max-width: 767px) {
   .nav {

@@ -3,8 +3,10 @@ const state = {
   search: "",
   gender: "all",
   page: 1,
+  nouveautesPage: 1,
 };
 const PAGE_SIZE = 25;
+const NOUVEAUTES_PAGE_SIZE = 8;
 
 /**
  * Produits : GET /.netlify/functions/products?sheetUrl=… (même domaine sous Netlify).
@@ -84,7 +86,8 @@ async function loadProductsFromSheet() {
       .map((row, i) => normalizeSheetRow(row, i))
       .filter((p) => p.brand || p.name || p.reference);
     PERFUMES = mapped;
-    NEW_ARRIVALS = PERFUMES.filter((p) => p.isNew).slice(0, 8);
+    NEW_ARRIVALS = PERFUMES.filter((p) => p.isNew);
+    state.nouveautesPage = 1;
     if (countEl && PERFUMES.length === 0) {
       countEl.textContent = "Aucune ligne produit (vérifiez les en-têtes du Google Sheet).";
     }
@@ -92,6 +95,7 @@ async function loadProductsFromSheet() {
     console.error("loadProductsFromSheet:", e);
     PERFUMES = [];
     NEW_ARRIVALS = [];
+    state.nouveautesPage = 1;
     if (countEl) {
       countEl.textContent =
         "Catalogue indisponible. Lancez `netlify dev` ou déployez sur Netlify (voir commentaire en tête de script.js).";
@@ -113,14 +117,34 @@ function bindWhatsApp() {
   });
 }
 
+function bindTikTok() {
+  document.querySelectorAll("[data-tiktok]").forEach((a) => {
+    a.href = TIKTOK_PROFILE_URL;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+  });
+}
+
 // ============= New Arrivals =============
 
 function renderNewArrivals() {
   const grid = $("#new-arrivals-grid");
   if (!grid) return;
 
-  grid.innerHTML = NEW_ARRIVALS.slice(0, 8).map(p => {
-    return `
+  const list = NEW_ARRIVALS;
+  const totalPages = Math.max(1, Math.ceil(list.length / NOUVEAUTES_PAGE_SIZE));
+  if (state.nouveautesPage > totalPages) state.nouveautesPage = totalPages;
+  if (state.nouveautesPage < 1) state.nouveautesPage = 1;
+
+  const start = (state.nouveautesPage - 1) * NOUVEAUTES_PAGE_SIZE;
+  const pageItems = list.slice(start, start + NOUVEAUTES_PAGE_SIZE);
+
+  if (list.length === 0) {
+    grid.innerHTML = `<tr><td colspan="6" class="empty">Aucune nouveauté (colonne « nouveauté » du catalogue).</td></tr>`;
+  } else {
+    grid.innerHTML = pageItems
+      .map(
+        (p) => `
       <tr>
         <td class="cell-ref">${escapeHtml(p.reference)}</td>
         <td class="cell-brand">${escapeHtml(p.brand)}</td>
@@ -128,8 +152,25 @@ function renderNewArrivals() {
         <td class="hide-sm cell-muted">${escapeHtml(p.family)}</td>
         <td class="hide-md cell-muted">${escapeHtml(p.gender)}</td>
         <td class="hide-md cell-muted">${escapeHtml(p.size)}</td>
-      </tr>`;
-  }).join("");
+      </tr>`
+      )
+      .join("");
+  }
+
+  const pag = $("#nouveautes-pagination");
+  const pageInfo = $("#nouveautes-page-info");
+  const prevBtn = $("#nouveautes-prev-page");
+  const nextBtn = $("#nouveautes-next-page");
+  if (pag && pageInfo && prevBtn && nextBtn) {
+    if (list.length > 0 && totalPages > 1) {
+      pag.style.display = "flex";
+      pageInfo.textContent = `Page ${state.nouveautesPage} / ${totalPages}`;
+      prevBtn.disabled = state.nouveautesPage === 1;
+      nextBtn.disabled = state.nouveautesPage === totalPages;
+    } else {
+      pag.style.display = "none";
+    }
+  }
 }
 
 // ============= Filters =============
@@ -228,10 +269,33 @@ function bindFilters() {
   });
 }
 
+function bindNouveautesPagination() {
+  const prev = $("#nouveautes-prev-page");
+  const next = $("#nouveautes-next-page");
+  if (!prev || !next) return;
+
+  prev.addEventListener("click", () => {
+    if (state.nouveautesPage > 1) {
+      state.nouveautesPage--;
+      renderNewArrivals();
+      document.getElementById("nouveautes").scrollIntoView({ behavior: "smooth" });
+    }
+  });
+  next.addEventListener("click", () => {
+    const total = Math.max(1, Math.ceil(NEW_ARRIVALS.length / NOUVEAUTES_PAGE_SIZE));
+    if (state.nouveautesPage < total) {
+      state.nouveautesPage++;
+      renderNewArrivals();
+      document.getElementById("nouveautes").scrollIntoView({ behavior: "smooth" });
+    }
+  });
+}
+
 // ============= Init =============
 document.addEventListener("DOMContentLoaded", () => {
   void (async () => {
     bindWhatsApp();
+    bindTikTok();
     initMobileMenu();
     const yearEl = document.getElementById("year");
     if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -239,6 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("filter-search")) {
       await loadProductsFromSheet();
       renderNewArrivals();
+      bindNouveautesPagination();
       bindFilters();
       renderCatalogue();
     }
