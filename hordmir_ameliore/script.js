@@ -7,6 +7,7 @@ const state = {
 };
 const PAGE_SIZE = 25;
 const NOUVEAUTES_PAGE_SIZE = 8;
+const MOBILE_MEDIA_QUERY = "(max-width: 767px)";
 
 /**
  * Produits : GET /.netlify/functions/products?sheetUrl=… (même domaine sous Netlify).
@@ -107,6 +108,15 @@ async function loadProductsFromSheet() {
 const $ = (sel) => document.querySelector(sel);
 const escapeHtml = (s) =>
   String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+function isMobileViewport() {
+  return window.matchMedia(MOBILE_MEDIA_QUERY).matches;
+}
+
+function scrollToTopOnMobile() {
+  if (!isMobileViewport()) return;
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+}
 
 // ============= WhatsApp links =============
 function bindWhatsApp() {
@@ -229,14 +239,67 @@ function renderCatalogue() {
 // ============= Bindings =============
 function bindFilters() {
   const headerSearch = $("#header-search");
+  const filterSearch = $("#filter-search");
+  const resultsArea = document.querySelector("#catalogue .table-wrap");
 
-  $("#filter-search").addEventListener("input", (e) => {
+  function updateAutocompleteSuggestions(query) {
+    if (!filterSearch) return;
+    const listId = "search-suggestions";
+    let datalist = document.getElementById(listId);
+    if (!datalist) {
+      datalist = document.createElement("datalist");
+      datalist.id = listId;
+      document.body.appendChild(datalist);
+    }
+    if (filterSearch.getAttribute("list") !== listId) {
+      filterSearch.setAttribute("list", listId);
+    }
+
+    const q = String(query || "").trim().toLowerCase();
+    if (!q) {
+      datalist.innerHTML = "";
+      return;
+    }
+
+    const seen = new Set();
+    const suggestions = [];
+    for (const p of PERFUMES) {
+      const candidates = [p.name, p.brand, p.reference].filter(Boolean);
+      for (const c of candidates) {
+        const value = String(c).trim();
+        const key = value.toLowerCase();
+        if (!key.includes(q) || seen.has(key)) continue;
+        seen.add(key);
+        suggestions.push(value);
+        if (suggestions.length >= 8) break;
+      }
+      if (suggestions.length >= 8) break;
+    }
+
+    datalist.innerHTML = suggestions.map((s) => `<option value="${escapeHtml(s)}"></option>`).join("");
+  }
+
+  function autoScrollToResultsIfNeeded() {
+    if (!isMobileViewport() || !resultsArea || !filterSearch) return;
+    if (!filterSearch.value.trim()) return;
+    // Sur mobile, on amène la liste visible pendant la saisie.
+    requestAnimationFrame(() => {
+      resultsArea.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  filterSearch.addEventListener("input", (e) => {
     state.search = e.target.value;
     state.page = 1;
     if (headerSearch && headerSearch.value !== state.search) {
       headerSearch.value = state.search;
     }
+    updateAutocompleteSuggestions(state.search);
     renderCatalogue();
+    autoScrollToResultsIfNeeded();
+  });
+  filterSearch.addEventListener("focus", () => {
+    updateAutocompleteSuggestions(filterSearch.value);
   });
   $("#filter-gender").addEventListener("change", (e) => {
     state.gender = e.target.value;
@@ -247,9 +310,10 @@ function bindFilters() {
     state.search = "";
     state.gender = "all";
     state.page = 1;
-    $("#filter-search").value = "";
+    filterSearch.value = "";
     if (headerSearch) headerSearch.value = "";
     $("#filter-gender").value = "all";
+    updateAutocompleteSuggestions("");
     renderCatalogue();
   });
 
@@ -273,7 +337,6 @@ function bindHeaderSearch() {
   const catalogueSection = document.getElementById("catalogue");
   const pageType = document.body.dataset.page || "";
   if (!headerSearch || !filterSearch) return;
-  const isMobileViewport = window.matchMedia("(max-width: 767px)").matches;
 
   function goToSearchPage() {
     const query = encodeURIComponent((headerSearch.value || state.search || "").trim());
@@ -312,7 +375,7 @@ function bindHeaderSearch() {
   }
 
   headerSearch.addEventListener("focus", () => {
-    if (!isMobileViewport) {
+    if (!isMobileViewport()) {
       scrollToCatalogueIfNeeded();
     }
   });
@@ -323,7 +386,7 @@ function bindHeaderSearch() {
     if (filterSearch.value !== state.search) {
       filterSearch.value = state.search;
     }
-    if (!isMobileViewport) {
+    if (!isMobileViewport()) {
       scrollToCatalogueIfNeeded();
     }
     renderCatalogue();
@@ -363,7 +426,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if ("scrollRestoration" in history) {
     history.scrollRestoration = "manual";
   }
-  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  scrollToTopOnMobile();
 
   void (async () => {
     bindWhatsApp();
@@ -394,6 +457,10 @@ document.addEventListener("DOMContentLoaded", () => {
       renderCatalogue();
     }
   })();
+});
+
+window.addEventListener("pageshow", () => {
+  scrollToTopOnMobile();
 });
 
 const header = document.querySelector(".header");
