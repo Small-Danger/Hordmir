@@ -4,6 +4,8 @@
  */
 
 const DEFAULT_CACHE_TTL_MS = 60000;
+const DEFAULT_ALLOWED_SHEET_URL =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vT3N4JbW7ANWtUFO-pmcSpQPUrdPQwpqoW3Ks9KF79rALJZNvF1biTkf34Rx9CUU3bTAOZID6B0-S02/pub?output=csv";
 
 const memoryCache = new Map();
 
@@ -12,6 +14,27 @@ function getTtlMs() {
   if (raw === undefined || raw === "") return DEFAULT_CACHE_TTL_MS;
   const n = Number(raw);
   return Number.isFinite(n) && n >= 0 ? n : DEFAULT_CACHE_TTL_MS;
+}
+
+function getAllowedSheetUrls() {
+  const raw = process.env.ALLOWED_SHEET_URLS;
+  if (!raw || !raw.trim()) return [DEFAULT_ALLOWED_SHEET_URL];
+  return raw
+    .split(",")
+    .map((u) => u.trim())
+    .filter(Boolean);
+}
+
+function isValidSheetUrl(url) {
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== "https:") return false;
+    if (parsed.hostname !== "docs.google.com") return false;
+    if (!parsed.pathname.includes("/spreadsheets/")) return false;
+    return parsed.searchParams.get("output") === "csv";
+  } catch {
+    return false;
+  }
 }
 
 /** Parse le texte CSV complet en tableau de lignes (chaque ligne = tableau de cellules). */
@@ -119,6 +142,23 @@ exports.handler = async (event) => {
       statusCode: 400,
       headers: jsonHeaders,
       body: JSON.stringify({ error: "Query parameter sheetUrl is required." }),
+    };
+  }
+
+  if (!isValidSheetUrl(sheetUrl)) {
+    return {
+      statusCode: 400,
+      headers: jsonHeaders,
+      body: JSON.stringify({ error: "sheetUrl must be a valid published Google Sheets CSV URL." }),
+    };
+  }
+
+  const allowedSheetUrls = getAllowedSheetUrls();
+  if (!allowedSheetUrls.includes(sheetUrl)) {
+    return {
+      statusCode: 403,
+      headers: jsonHeaders,
+      body: JSON.stringify({ error: "sheetUrl is not allowed." }),
     };
   }
 
