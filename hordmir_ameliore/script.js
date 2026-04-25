@@ -242,43 +242,6 @@ function bindFilters() {
   const filterSearch = $("#filter-search");
   const resultsArea = document.querySelector("#catalogue .table-wrap");
 
-  function updateAutocompleteSuggestions(query) {
-    if (!filterSearch) return;
-    const listId = "search-suggestions";
-    let datalist = document.getElementById(listId);
-    if (!datalist) {
-      datalist = document.createElement("datalist");
-      datalist.id = listId;
-      document.body.appendChild(datalist);
-    }
-    if (filterSearch.getAttribute("list") !== listId) {
-      filterSearch.setAttribute("list", listId);
-    }
-
-    const q = String(query || "").trim().toLowerCase();
-    if (!q) {
-      datalist.innerHTML = "";
-      return;
-    }
-
-    const seen = new Set();
-    const suggestions = [];
-    for (const p of PERFUMES) {
-      const candidates = [p.name, p.brand, p.reference].filter(Boolean);
-      for (const c of candidates) {
-        const value = String(c).trim();
-        const key = value.toLowerCase();
-        if (!key.includes(q) || seen.has(key)) continue;
-        seen.add(key);
-        suggestions.push(value);
-        if (suggestions.length >= 8) break;
-      }
-      if (suggestions.length >= 8) break;
-    }
-
-    datalist.innerHTML = suggestions.map((s) => `<option value="${escapeHtml(s)}"></option>`).join("");
-  }
-
   function autoScrollToResultsIfNeeded() {
     if (!isMobileViewport() || !resultsArea || !filterSearch) return;
     if (!filterSearch.value.trim()) return;
@@ -294,12 +257,8 @@ function bindFilters() {
     if (headerSearch && headerSearch.value !== state.search) {
       headerSearch.value = state.search;
     }
-    updateAutocompleteSuggestions(state.search);
     renderCatalogue();
     autoScrollToResultsIfNeeded();
-  });
-  filterSearch.addEventListener("focus", () => {
-    updateAutocompleteSuggestions(filterSearch.value);
   });
   $("#filter-gender").addEventListener("change", (e) => {
     state.gender = e.target.value;
@@ -313,7 +272,6 @@ function bindFilters() {
     filterSearch.value = "";
     if (headerSearch) headerSearch.value = "";
     $("#filter-gender").value = "all";
-    updateAutocompleteSuggestions("");
     renderCatalogue();
   });
 
