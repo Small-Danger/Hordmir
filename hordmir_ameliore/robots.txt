@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hordmirperfumes.netlify.app/sitemap.xml
+Sitemap: https://hordmir.com/sitemap.xml
