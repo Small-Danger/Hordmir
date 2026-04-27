@@ -34,9 +34,31 @@ function sheetCell(row, ...keys) {
   return "";
 }
 
+function sheetCellValue(row, ...keys) {
+  for (const k of keys) {
+    if (Object.prototype.hasOwnProperty.call(row, k)) {
+      return String(row[k] ?? "").trim();
+    }
+  }
+  return "";
+}
+
 function sheetTruthyNew(val) {
   const s = String(val).trim().toLowerCase();
   return ["1", "true", "oui", "yes", "x", "new", "nouveau", "vrai"].includes(s);
+}
+
+function isAvailableFromSheet(row) {
+  const availability = sheetCellValue(
+    row,
+    "disponibilite",
+    "disponibilité",
+    "disponible",
+    "availability",
+    "available"
+  ).toLowerCase();
+  // Règle demandée: vide = disponible ; "non" = non affiché.
+  return availability !== "non";
 }
 
 /** Colonnes courtes type F / H / U du sheet → libellés du filtre HTML. */
@@ -84,6 +106,7 @@ async function loadProductsFromSheet() {
     if (data.error) throw new Error(data.error);
     const raw = Array.isArray(data.products) ? data.products : [];
     const mapped = raw
+      .filter((row) => isAvailableFromSheet(row))
       .map((row, i) => normalizeSheetRow(row, i))
       .filter((p) => p.brand || p.name || p.reference);
     PERFUMES = mapped;
