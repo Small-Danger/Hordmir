@@ -481,7 +481,11 @@ body[data-page="search"] .search-page-main {
   width: 80%;
   max-width: 280px;
   height: auto;
-  object-fit: contain;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 16px;
+  border: 1px solid rgba(212, 175, 55, 0.22);
   filter: drop-shadow(-20px 40px 80px rgba(0,0,0,0.6))
           drop-shadow(0 0 60px rgba(91,58,122,0.4));
   position: relative;
@@ -492,6 +496,21 @@ body[data-page="search"] .search-page-main {
   .hero-product-img {
     width: 100%;
     max-width: 490px;
+    max-height: 380px;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-visual {
+    margin-top: 0.4rem;
+  }
+
+  .hero-product-img {
+    width: min(92vw, 430px);
+    max-width: none;
+    max-height: 48vh;
+    aspect-ratio: auto;
+    border-radius: 14px;
   }
 }
 
